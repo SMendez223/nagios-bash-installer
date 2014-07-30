@@ -10,14 +10,12 @@ while [ $PASS != $REPASS ]; do
 	read -s -p "Retype: " REPASS; echo
 done
 
-#initial installs
-apt-get install -y apache2 apache2-utils
+udo debconf-set-selections <<< "postfix postfix/mailname string diggalabs.com"
+sudo debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
+sudo debconf-set-selections <<< "nagios3-cgi nagios3/adminpassword string $PASS"
+sudo debconf-set-selections <<< "nagios3-cgi nagios3/adminpassword-repeat string $PASS"
 
-#file setup
-mkdir /etc/nagios3
-htpasswd -cb /etc/nagios3/htpasswd.users nagiosadmin $PASS
 
-#nagios install
-apt-get install nagios3
+apt-get install -y nagios3
 
 
